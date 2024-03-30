@@ -1,6 +1,6 @@
-import { graph, config, auth } from '@grafbase/sdk';
+import { graph, config, auth, StringDefinition, Graph } from '@grafbase/sdk';
 
-const g = graph.Standalone();
+const g: Graph = graph.Standalone();
 
 const User = g.model('User', {
   name: g.string().length({ min: 2, max: 100 }),
@@ -10,7 +10,7 @@ const User = g.model('User', {
   githubUrl: g.url().optional(),
   linkedinUrl: g.url().optional(), 
   projects: g.relation(() => Project).list().optional(),
-}).auth((rules) => {
+}).auth((rules: any) => { // Assuming rules are provided dynamically and their type is not explicitly defined
   rules.public().read();
 });
 
@@ -20,9 +20,9 @@ const Project = g.model('Project', {
   image: g.url(),
   liveSiteUrl: g.url(), 
   githubUrl: g.url(), 
-  category: g.string().search(),
+  category: g.string().search(), // Access the 'search' property via StringDefinition
   createdBy: g.relation(() => User),
-}).auth((rules) => {
+}).auth((rules: any) => { // Assuming rules are provided dynamically and their type is not explicitly defined
   rules.public().read();
   rules.private().create().delete().update();
 });
@@ -36,6 +36,6 @@ export default config({
   graph: g,
   auth: {
     providers: [jwt],
-    rules: (rules) => rules.private(),
+    rules: (rules: any) => rules.private(), // Assuming rules are provided dynamically and their type is not explicitly defined
   },
 });
